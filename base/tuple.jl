@@ -393,6 +393,28 @@ function map(f, t::Any32, s::Any32)
     end
     (A...,)
 end
+
+"""
+    map(f)
+
+Create a function that maps its arguments with function `f` using [`map`](@ref), i.e.
+a function equivalent to `x -> map(f, x)`.
+
+The returned function is of type `Base.Fix1{typeof(map)}`, which can be
+used to implement specialized methods.
+
+# Examples
+```jldoctest
+julia> (1, 2, Inf, 4, NaN, 6) |> map(isfinite)
+(true, true, false, true, false, true)
+```
+!!! compat "Julia 1.11"
+    This method requires at least Julia 1.11.
+"""
+function map(f)
+    Fix1(map, f)
+end
+
 # n argument function
 heads(ts::Tuple...) = map(t -> t[1], ts)
 tails(ts::Tuple...) = map(tail, ts)
